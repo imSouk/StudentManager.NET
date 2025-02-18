@@ -11,10 +11,15 @@ namespace CreateDb
 
             // Add services to the container.
             builder.Services.AddRazorPages();
-            builder.Services.AddCors(options=>{
-                options.AddPolicy("AllowReactApp", policy =>policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod());
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", policy =>
+                {
+                    policy.AllowAnyOrigin()  // Permite qualquer origem
+                          .AllowAnyMethod()  // Permite qualquer método HTTP (GET, POST, etc.)
+                          .AllowAnyHeader(); // Permite qualquer cabeçalho
+                });
             });
-
             builder.Services.AddDbContext<SchoolContext>(options => 
             { 
                 options.UseSqlServer("Server=DESKTOP-0M45M7S\\SQLEXPRESS;Database=SchoolDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -39,7 +44,7 @@ namespace CreateDb
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors("AllowReactApp");
+            app.UseCors("AllowAllOrigins");
             app.UseAuthorization();
 
             app.MapRazorPages();
